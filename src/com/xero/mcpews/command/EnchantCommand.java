@@ -9,10 +9,16 @@ public abstract class EnchantCommand extends Command {
     protected String player;
     protected int level;
 
-    public static EnchantCommand create(String player, String enchantmentName, int level) {
-        EnchantCommand command = new ByNameOverload();
+    public static ByNameOverload create(String player, String enchantmentName) {
+        return ByNameOverload.create(player, enchantmentName, -1);
+    }
 
-        return command;
+    public static ByNameOverload create(String player, String enchantmentName, int level) {
+        return ByNameOverload.create(player, enchantmentName, level);
+    }
+
+    public static ByIdOverload create(String player, int enchantmentId, int level) {
+        return ByIdOverload.create(player, enchantmentId, level);
     }
 
     public String getPlayer() {
@@ -42,8 +48,7 @@ public abstract class EnchantCommand extends Command {
 
     @Override
     public void attachParams(StringBuilder builder) {
-        builder.append(player)
-                .append(PARAM_SPLITER)
+        builder.append(player).append(PARAM_SPLITER)
                 .append(getEnchantment());
         if (level >= 0) {
             builder.append(PARAM_SPLITER)
@@ -55,6 +60,9 @@ public abstract class EnchantCommand extends Command {
     public CommandResponse serializeResponse(JsonObject obj, Gson gson) {
         return gson.fromJson(obj, Response.class);
     }
+
+    @Override
+    public abstract String getOverload();
 
     protected abstract String getEnchantment();
 
@@ -97,6 +105,11 @@ public abstract class EnchantCommand extends Command {
         protected String getEnchantment() {
             return enchantmentName;
         }
+
+        @Override
+        public String getOverload() {
+            return "byName";
+        }
     }
 
     public static class ByIdOverload extends EnchantCommand {
@@ -121,6 +134,11 @@ public abstract class EnchantCommand extends Command {
         @Override
         protected String getEnchantment() {
             return Integer.toString(enchantmentId);
+        }
+
+        @Override
+        public String getOverload() {
+            return "byId";
         }
     }
 }

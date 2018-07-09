@@ -33,7 +33,6 @@ public abstract class Command {
 
     public abstract CommandResponse serializeResponse(JsonObject obj, Gson gson);
 
-    @Deprecated
     public String getOverload() {
         return "default";
     }

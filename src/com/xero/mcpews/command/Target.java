@@ -46,11 +46,12 @@ public class Target {
         return fromSelector("e");
     }
 
-    protected void addCriterion(String key, String value, boolean isInvert) {
+    public Target addCriterion(String key, String value, boolean isInvert) {
         for (Criterion e : mCriteria) {
-            if (e.getKey().equals(key) && !e.isInvert()) return;
+            if (e.getKey().equals(key) && !e.isInvert()) return this;
         }
         mCriteria.add(new Criterion(key, value, isInvert));
+        return this;
     }
 
     @Override

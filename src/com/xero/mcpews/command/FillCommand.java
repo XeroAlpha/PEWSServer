@@ -3,9 +3,76 @@ package com.xero.mcpews.command;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-public class FillCommand extends Command {
+public abstract class FillCommand extends Command {
     public static final CommandType TYPE = CommandType.registerCommandType("fill", FillCommand.class);
-//TODO: add members
+
+    public static final String HANDLING_DESTROY = "destroy";
+    public static final String HANDLING_HOLLOW = "hollow";
+    public static final String HANDLING_KEEP = "keep";
+    public static final String HANDLING_OUTLINE = "outline";
+    public static final String HANDLING_REPLACE = "replace";
+
+    protected BlockPostion from, to;
+    protected String tileName;
+    protected int tileData;
+    protected String oldBlockHandling;
+
+    public static DefaultOverload createDefault(BlockPostion from, BlockPostion to, String tileName) {
+        return createDefault(from, to, tileName, 0);
+    }
+
+    public static DefaultOverload createDefault(BlockPostion from, BlockPostion to, String tileName, int tileData) {
+        return createDefault(from, to, tileName, tileData, "replace");
+    }
+
+    public static DefaultOverload createDefault(BlockPostion from, BlockPostion to, String tileName, int tileData, String oldBlockHandling) {
+        return DefaultOverload.create(from, to, tileName, tileData, oldBlockHandling);
+    }
+
+    public static ReplaceOverload createReplace(BlockPostion from, BlockPostion to, String tileName, int tileData, String replaceTileName, int replaceDataValue) {
+        return ReplaceOverload.create(from, to, tileName, tileData, replaceTileName, replaceDataValue);
+    }
+
+    public BlockPostion getFrom() {
+        return from;
+    }
+
+    public void setFrom(BlockPostion from) {
+        this.from = from;
+    }
+
+    public BlockPostion getTo() {
+        return to;
+    }
+
+    public void setTo(BlockPostion to) {
+        this.to = to;
+    }
+
+    public String getTileName() {
+        return tileName;
+    }
+
+    public void setTileName(String tileName) {
+        this.tileName = tileName;
+    }
+
+    public int getTileData() {
+        return tileData;
+    }
+
+    public void setTileData(int tileData) {
+        this.tileData = tileData;
+    }
+
+    public String getOldBlockHandling() {
+        return oldBlockHandling;
+    }
+
+    public void setOldBlockHandling(String oldBlockHandling) {
+        this.oldBlockHandling = oldBlockHandling;
+    }
+
     @Override
     public CommandType getType() {
         return TYPE;
@@ -13,15 +80,98 @@ public class FillCommand extends Command {
 
     @Override
     public void attachParams(StringBuilder builder) {
-
+        builder.append(from.toString()).append(PARAM_SPLITER)
+                .append(to.toString()).append(PARAM_SPLITER)
+                .append(tileName).append(PARAM_SPLITER)
+                .append(tileData).append(PARAM_SPLITER)
+                .append(getOldBlockHandling());
     }
 
     @Override
     public CommandResponse serializeResponse(JsonObject obj, Gson gson) {
-        return null;
+        return gson.fromJson(obj, Response.class);
     }
 
+    @Override
+    public abstract String getOverload();
+
     public static class Response extends CommandResponse<FillCommand> {
-        
+        private String blockName;
+        private int fillCount;
+
+        public String getBlockName() {
+            return blockName;
+        }
+
+        public int getFillCount() {
+            return fillCount;
+        }
+    }
+
+    public static class DefaultOverload extends FillCommand {
+        public static DefaultOverload create(BlockPostion from, BlockPostion to, String tileName, int tileData, String oldBlockHandling) {
+            DefaultOverload command = new DefaultOverload();
+            command.from = from;
+            command.to = to;
+            command.tileName = tileName;
+            command.tileData = tileData;
+            command.oldBlockHandling = oldBlockHandling;
+            return command;
+        }
+
+        @Override
+        public String getOverload() {
+            return "default";
+        }
+    }
+
+    public static class ReplaceOverload extends FillCommand {
+        private String replaceTileName;
+        private int replaceDataValue;
+
+        public static ReplaceOverload create(BlockPostion from, BlockPostion to, String tileName, int tileData, String replaceTileName, int replaceDataValue) {
+            ReplaceOverload command = new ReplaceOverload();
+            command.from = from;
+            command.to = to;
+            command.tileName = tileName;
+            command.tileData = tileData;
+            command.oldBlockHandling = HANDLING_REPLACE;
+            command.replaceTileName = replaceTileName;
+            command.replaceDataValue = replaceDataValue;
+            return command;
+        }
+
+        public String getReplaceTileName() {
+            return replaceTileName;
+        }
+
+        public void setReplaceTileName(String replaceTileName) {
+            this.replaceTileName = replaceTileName;
+        }
+
+        public int getReplaceDataValue() {
+            return replaceDataValue;
+        }
+
+        public void setReplaceDataValue(int replaceDataValue) {
+            this.replaceDataValue = replaceDataValue;
+        }
+
+        @Override
+        public String getOldBlockHandling() {
+            return "replace";
+        }
+
+        @Override
+        public void attachParams(StringBuilder builder) {
+            super.attachParams(builder);
+            builder.append(replaceTileName).append(PARAM_SPLITER)
+                    .append(replaceDataValue);
+        }
+
+        @Override
+        public String getOverload() {
+            return "replace";
+        }
     }
 }
