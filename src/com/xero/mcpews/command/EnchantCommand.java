@@ -9,16 +9,16 @@ public abstract class EnchantCommand extends Command {
     protected String player;
     protected int level;
 
-    public static ByNameOverload create(String player, String enchantmentName) {
-        return ByNameOverload.create(player, enchantmentName, -1);
+    public static ByNameOverload create(Target player, String enchantmentName) {
+        return create(player, enchantmentName, -1);
     }
 
-    public static ByNameOverload create(String player, String enchantmentName, int level) {
-        return ByNameOverload.create(player, enchantmentName, level);
+    public static ByNameOverload create(Target player, String enchantmentName, int level) {
+        return ByNameOverload.create(player.toString(), enchantmentName, level);
     }
 
-    public static ByIdOverload create(String player, int enchantmentId, int level) {
-        return ByIdOverload.create(player, enchantmentId, level);
+    public static ByIdOverload create(Target player, int enchantmentId, int level) {
+        return ByIdOverload.create(player.toString(), enchantmentId, level);
     }
 
     public String getPlayer() {

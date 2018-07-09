@@ -1,8 +1,8 @@
 package com.xero.mcpews.event;
 
-public class BoardTextUpdatedEvent extends Event {
+public class BoardTextUpdatedEvent extends BaseEvent {
     public static final EventType TYPE = EventType.registerEventType("BoardTextUpdated", BoardTextUpdatedEvent.class);
-//TODO: add members
+    //TODO: add members
     @Override
     public EventType getType() {
         return TYPE;

@@ -12,40 +12,40 @@ public abstract class FillCommand extends Command {
     public static final String HANDLING_OUTLINE = "outline";
     public static final String HANDLING_REPLACE = "replace";
 
-    protected BlockPostion from, to;
+    protected Position from, to;
     protected String tileName;
     protected int tileData;
     protected String oldBlockHandling;
 
-    public static DefaultOverload createDefault(BlockPostion from, BlockPostion to, String tileName) {
+    public static DefaultOverload createDefault(Position from, Position to, String tileName) {
         return createDefault(from, to, tileName, 0);
     }
 
-    public static DefaultOverload createDefault(BlockPostion from, BlockPostion to, String tileName, int tileData) {
+    public static DefaultOverload createDefault(Position from, Position to, String tileName, int tileData) {
         return createDefault(from, to, tileName, tileData, "replace");
     }
 
-    public static DefaultOverload createDefault(BlockPostion from, BlockPostion to, String tileName, int tileData, String oldBlockHandling) {
+    public static DefaultOverload createDefault(Position from, Position to, String tileName, int tileData, String oldBlockHandling) {
         return DefaultOverload.create(from, to, tileName, tileData, oldBlockHandling);
     }
 
-    public static ReplaceOverload createReplace(BlockPostion from, BlockPostion to, String tileName, int tileData, String replaceTileName, int replaceDataValue) {
+    public static ReplaceOverload createReplace(Position from, Position to, String tileName, int tileData, String replaceTileName, int replaceDataValue) {
         return ReplaceOverload.create(from, to, tileName, tileData, replaceTileName, replaceDataValue);
     }
 
-    public BlockPostion getFrom() {
+    public Position getFrom() {
         return from;
     }
 
-    public void setFrom(BlockPostion from) {
+    public void setFrom(Position from) {
         this.from = from;
     }
 
-    public BlockPostion getTo() {
+    public Position getTo() {
         return to;
     }
 
-    public void setTo(BlockPostion to) {
+    public void setTo(Position to) {
         this.to = to;
     }
 
@@ -109,7 +109,7 @@ public abstract class FillCommand extends Command {
     }
 
     public static class DefaultOverload extends FillCommand {
-        public static DefaultOverload create(BlockPostion from, BlockPostion to, String tileName, int tileData, String oldBlockHandling) {
+        public static DefaultOverload create(Position from, Position to, String tileName, int tileData, String oldBlockHandling) {
             DefaultOverload command = new DefaultOverload();
             command.from = from;
             command.to = to;
@@ -129,7 +129,7 @@ public abstract class FillCommand extends Command {
         private String replaceTileName;
         private int replaceDataValue;
 
-        public static ReplaceOverload create(BlockPostion from, BlockPostion to, String tileName, int tileData, String replaceTileName, int replaceDataValue) {
+        public static ReplaceOverload create(Position from, Position to, String tileName, int tileData, String replaceTileName, int replaceDataValue) {
             ReplaceOverload command = new ReplaceOverload();
             command.from = from;
             command.to = to;

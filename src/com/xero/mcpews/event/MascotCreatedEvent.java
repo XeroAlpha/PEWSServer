@@ -1,8 +1,8 @@
 package com.xero.mcpews.event;
 
-public class MascotCreatedEvent extends Event {
+public class MascotCreatedEvent extends BaseEvent {
     public static final EventType TYPE = EventType.registerEventType("MascotCreated", MascotCreatedEvent.class);
-//TODO: add members
+    //TODO: add members
     @Override
     public EventType getType() {
         return TYPE;

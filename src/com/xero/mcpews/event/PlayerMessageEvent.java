@@ -1,6 +1,6 @@
 package com.xero.mcpews.event;
 
-public class PlayerMessageEvent extends Event {
+public class PlayerMessageEvent extends BaseEvent {
     public static final EventType TYPE = EventType.registerEventType("PlayerMessage", PlayerMessageEvent.class);
 
     public static final String MESSAGE_CHAT = "chat";

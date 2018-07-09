@@ -1,9 +1,6 @@
 package com.xero.mcpews.frame;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 
 import java.lang.reflect.Method;
 
@@ -27,9 +24,9 @@ public class Frame {
                 throw new RuntimeException("Unknown body: " + frame.header.getMessagePurpose());
             } else {
                 Class<? extends Body> clazz = purpose.getBodyClass();
-                JsonObject body = obj.get("body").getAsJsonObject();
+                JsonElement body = obj.get("body");
                 try {
-                    Method method = clazz.getMethod("fromJson", JsonObject.class, Gson.class);
+                    Method method = clazz.getMethod("fromJson", JsonElement.class, Gson.class);
                     frame.body = (Body) method.invoke(null, body, gson);
                 } catch (Exception ex) {
                     frame.body = gson.fromJson(body, clazz);

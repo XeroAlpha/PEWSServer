@@ -4,6 +4,7 @@ public abstract class BaseEvent extends Event {
     private int AccountType;
     private String ActiveSessionID;
     private String AppSessionID;
+    private int Biome;
     private String Build;
     private int BuildPlat;
     private boolean Cheevos;
@@ -11,6 +12,7 @@ public abstract class BaseEvent extends Event {
     private int CurrentInput;
     private int DeviceSessionId;
     private int Dim;
+    private String Direction;
     private int Mode;
     private String Plat;
     private int PlayerGameMode;
@@ -28,6 +30,10 @@ public abstract class BaseEvent extends Event {
 
     public String getAppSessionID() {
         return AppSessionID;
+    }
+
+    public int getBiome() {
+        return Biome;
     }
 
     public String getBuild() {
@@ -56,6 +62,10 @@ public abstract class BaseEvent extends Event {
 
     public int getDimension() {
         return Dim;
+    }
+
+    public String getDirection() {
+        return Direction;
     }
 
     public int getMode() {
