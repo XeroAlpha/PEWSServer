@@ -6,8 +6,12 @@ public class SubscribeBody extends Body {
     private String eventName;
 
     public static SubscribeBody create(EventType type) {
+        return create(type.getId());
+    }
+
+    public static SubscribeBody create(String type) {
         SubscribeBody body = new SubscribeBody();
-        body.eventName = type.getId();
+        body.eventName = type;
         return body;
     }
 

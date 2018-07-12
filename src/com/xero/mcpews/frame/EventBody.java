@@ -23,22 +23,22 @@ public class EventBody extends Body {
         JsonObject obj = json.getAsJsonObject();
         EventBody body = new EventBody();
         body.eventName = obj.get("eventName").getAsString();
+        JsonElement event = obj.get("properties");
         EventType type = EventType.fromId(body.eventName);
         if (type == null) {
-            throw new RuntimeException("Unknown event: " + body.eventName);
+            body.properties = Event.Raw.fromJson(body.eventName, event, gson);
         } else {
             Class<? extends Event> clazz = type.getEventClass();
-            JsonObject event = obj.get("properties").getAsJsonObject();
             try {
-                Method method = clazz.getMethod("fromJson", JsonObject.class, Gson.class);
+                Method method = clazz.getMethod("fromJson", JsonElement.class, Gson.class);
                 body.properties = (Event) method.invoke(null, event, gson);
             } catch (Exception ex) {
                 body.properties = gson.fromJson(event, clazz);
             }
-            if (body.properties != null) {
-                JsonElement measurements = obj.get("measurements");
-                if (measurements != null) body.properties.assignMeasurements(measurements);
-            }
+        }
+        if (body.properties != null) {
+            JsonElement measurements = obj.get("measurements");
+            if (measurements != null) body.properties.assignMeasurements(measurements);
         }
         return body;
     }

@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 public class Frame {
     private static Gson gson = new GsonBuilder()
             .create();
+    private static JsonParser parser = new JsonParser();
 
     private Header header;
     private Body body;
@@ -15,7 +16,6 @@ public class Frame {
         Frame frame = null;
         try {
             frame = new Frame();
-            JsonParser parser = new JsonParser();
             JsonObject obj = parser.parse(json).getAsJsonObject();
             frame.header = gson.fromJson(obj.get("header").getAsJsonObject(), Header.class);
             if (frame.header == null) throw new RuntimeException("Cannot find header.");

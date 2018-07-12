@@ -20,7 +20,7 @@ public class Main {
         scan.useDelimiter("\n");
         MCResponseReceiver<Command.StringResponse> rec = new MCResponseReceiver<Command.StringResponse>() {
             @Override
-            public void onReceiveResponse(Command.StringResponse response) {
+            public void onReceiveResponse(MCClient client, Command.StringResponse response) {
                 System.out.println(response.getJson().toString());
             }
         };
@@ -63,6 +63,11 @@ class MyListener implements MCListener, MCEventReceiver<PlayerMessageEvent>, MCR
     }
 
     @Override
+    public void onException(MCClient client, Exception ex) {
+        ex.printStackTrace();
+    }
+
+    @Override
     public void onReceiveEvent(MCClient client, PlayerMessageEvent event) {
         if (!PlayerMessageEvent.MESSAGE_CHAT.equals(event.getMessageType())) return;
         System.out.println(event.getSender() + ": " + event.getMessage());
@@ -78,7 +83,7 @@ class MyListener implements MCListener, MCEventReceiver<PlayerMessageEvent>, MCR
     }
 
     @Override
-    public void onReceiveResponse(FillCommand.Response response) {
+    public void onReceiveResponse(MCClient client, FillCommand.Response response) {
         System.out.print(response.getStatusCode() + ":" + response.getStatusMessage());
     }
 }

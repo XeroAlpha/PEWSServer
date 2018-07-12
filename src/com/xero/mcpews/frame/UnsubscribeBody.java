@@ -6,8 +6,12 @@ public class UnsubscribeBody extends Body {
     private String eventName;
 
     public static UnsubscribeBody create(EventType type) {
+        return create(type.getId());
+    }
+
+    public static UnsubscribeBody create(String type) {
         UnsubscribeBody body = new UnsubscribeBody();
-        body.eventName = type.getId();
+        body.eventName = type;
         return body;
     }
 
