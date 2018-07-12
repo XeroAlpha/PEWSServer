@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/PEWSServer.iml" filepath="$PROJECT_DIR$/PEWSServer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/extend/PEWSServerExtended.iml" filepath="$PROJECT_DIR$/extend/PEWSServerExtended.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PEWSServerLite.iml" filepath="$PROJECT_DIR$/PEWSServerLite.iml" />
+      <module fileurl="file://$PROJECT_DIR$/test/Test.iml" filepath="$PROJECT_DIR$/test/Test.iml" />
     </modules>
   </component>
 </project>

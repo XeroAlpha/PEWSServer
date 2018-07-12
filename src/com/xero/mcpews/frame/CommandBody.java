@@ -1,12 +1,7 @@
 package com.xero.mcpews.frame;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.xero.mcpews.command.Command;
-import com.xero.mcpews.command.CommandType;
 import com.xero.mcpews.command.Origin;
-
-import java.lang.reflect.Method;
 
 public class CommandBody extends Body {
     private int version;

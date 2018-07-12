@@ -1,7 +1,7 @@
 package com.xero.mcpews.command;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
 
 public class GameruleCommand extends Command {
     public static final CommandType TYPE = CommandType.registerCommandType("gamerule", GameruleCommand.class);
@@ -17,7 +17,7 @@ public class GameruleCommand extends Command {
     }
 
     @Override
-    public CommandResponse serializeResponse(JsonObject obj, Gson gson) {
+    public CommandResponse serializeResponse(JsonElement json, Gson gson) {
         return null;
     }
 

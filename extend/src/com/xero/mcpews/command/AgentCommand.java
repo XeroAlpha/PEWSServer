@@ -1,7 +1,7 @@
 package com.xero.mcpews.command;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
 
 public class AgentCommand extends Command {
     public static final CommandType TYPE = CommandType.registerCommandType("agent", AgentCommand.class);
@@ -33,11 +33,11 @@ public class AgentCommand extends Command {
     }
 
     @Override
-    public CommandResponse serializeResponse(JsonObject obj, Gson gson) {
-        return gson.fromJson(obj, Response.class);
+    public CommandResponse serializeResponse(JsonElement json, Gson gson) {
+        return gson.fromJson(json, Response.class);
     }
 
-    public static class Response extends CommandResponse<SayCommand> {
+    public static class Response extends CommandResponse<AgentCommand> {
         private String message;
 
         public String getMessage() {

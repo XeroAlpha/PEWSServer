@@ -1,7 +1,7 @@
 package com.xero.mcpews.command;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
 import com.xero.mcpews.MCResponseReceiver;
 
 public abstract class Command {
@@ -31,7 +31,7 @@ public abstract class Command {
 
     public abstract void attachParams(StringBuilder builder);
 
-    public abstract CommandResponse serializeResponse(JsonObject obj, Gson gson);
+    public abstract CommandResponse serializeResponse(JsonElement obj, Gson gson);
 
     public String getOverload() {
         return "default";
@@ -67,21 +67,21 @@ public abstract class Command {
         }
 
         @Override
-        public CommandResponse serializeResponse(JsonObject obj, Gson gson) {
-            return StringResponse.create(obj);
+        public CommandResponse serializeResponse(JsonElement json, Gson gson) {
+            return StringResponse.create(json);
         }
     }
 
     public static class StringResponse extends CommandResponse<StringCommand> {
-        private transient JsonObject mJson;
+        private transient JsonElement mJson;
 
-        public static StringResponse create(JsonObject json) {
+        public static StringResponse create(JsonElement json) {
             StringResponse response = new StringResponse();
             response.mJson = json;
             return response;
         }
 
-        public JsonObject getJson() {
+        public JsonElement getJson() {
             return mJson;
         }
     }

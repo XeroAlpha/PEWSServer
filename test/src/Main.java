@@ -1,10 +1,9 @@
-package com.xero.mcpews;
-
+import com.xero.mcpews.*;
 import com.xero.mcpews.command.Command;
-import com.xero.mcpews.command.SayCommand;
+import com.xero.mcpews.command.FillCommand;
+import com.xero.mcpews.command.Position;
 import com.xero.mcpews.event.PlayerMessageEvent;
 import com.xero.mcpews.event.PlayerTravelledEvent;
-import com.xero.mcpews.event.ScreenChangedEvent;
 import org.java_websocket.WebSocket;
 
 import java.net.InetSocketAddress;
@@ -39,18 +38,17 @@ class MyFactory extends MCListenerFactory {
     }
 }
 
-class MyListener implements MCListener, MCEventReceiver<PlayerMessageEvent>, MCResponseReceiver<SayCommand.Response> {
+class MyListener implements MCListener, MCEventReceiver<PlayerMessageEvent>, MCResponseReceiver<FillCommand.Response> {
     @Override
     public void onCreate(MCClient client) {
         System.out.println("Connected!");
         client.registerReceiver(PlayerMessageEvent.TYPE, this);
-        client.registerReceiver(ScreenChangedEvent.TYPE, new MCEventReceiver<ScreenChangedEvent>() {
+        client.registerReceiver(PlayerTravelledEvent.TYPE, new MCEventReceiver<PlayerTravelledEvent>() {
             @Override
-            public void onReceiveEvent(MCClient client, ScreenChangedEvent event) {
-                System.out.println("ScreenChangedEvent!");
+            public void onReceiveEvent(MCClient client, PlayerTravelledEvent event) {
+                System.out.println("Player travelled");
             }
         });
-        client.registerReceiver(PlayerTravelledEvent.TYPE, null);
     }
 
     @Override
@@ -68,16 +66,19 @@ class MyListener implements MCListener, MCEventReceiver<PlayerMessageEvent>, MCR
     public void onReceiveEvent(MCClient client, PlayerMessageEvent event) {
         if (!PlayerMessageEvent.MESSAGE_CHAT.equals(event.getMessageType())) return;
         System.out.println(event.getSender() + ": " + event.getMessage());
-        client.sendCommand(SayCommand.create("I heard: " + event.getMessage()).responseTo(this));
         if (event.getMessage().equals("close")) {
             client.destroy();
-        } else if (event.getMessage().equals("r")) {
-            client.unregisterReceiver(event.getType());
+        } else if (event.getMessage().equals("fill")) {
+            client.sendCommand(FillCommand.createDefault(
+                    Position.createRelative(0, 0, 0),
+                    Position.createRelative(3, 3, 3),
+                    "tnt"
+                    ).responseTo(this));
         }
     }
 
     @Override
-    public void onReceiveResponse(SayCommand.Response response) {
-        System.out.println("Send command success: " + response.getMessage());
+    public void onReceiveResponse(FillCommand.Response response) {
+        System.out.print(response.getStatusCode() + ":" + response.getStatusMessage());
     }
 }

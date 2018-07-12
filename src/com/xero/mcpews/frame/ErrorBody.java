@@ -1,7 +1,6 @@
 package com.xero.mcpews.frame;
 
 import com.xero.mcpews.MCError;
-import com.xero.mcpews.event.EventType;
 
 public class ErrorBody extends Body implements MCError {
     private int statusCode;

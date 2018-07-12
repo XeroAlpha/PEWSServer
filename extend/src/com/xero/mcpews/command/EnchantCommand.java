@@ -1,7 +1,7 @@
 package com.xero.mcpews.command;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
 
 public abstract class EnchantCommand extends Command {
     public static final CommandType TYPE = CommandType.registerCommandType("enchant", EnchantCommand.class);
@@ -57,8 +57,8 @@ public abstract class EnchantCommand extends Command {
     }
 
     @Override
-    public CommandResponse serializeResponse(JsonObject obj, Gson gson) {
-        return gson.fromJson(obj, Response.class);
+    public CommandResponse serializeResponse(JsonElement json, Gson gson) {
+        return gson.fromJson(json, Response.class);
     }
 
     @Override
