@@ -17,7 +17,7 @@ public class GameruleCommand extends Command {
     }
 
     @Override
-    public CommandResponse serializeResponse(JsonElement json, Gson gson) {
+    public CommandResponse deserializeResponse(JsonElement json, Gson gson) {
         return null;
     }
 

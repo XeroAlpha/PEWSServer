@@ -48,16 +48,16 @@ public abstract class EnchantCommand extends Command {
 
     @Override
     public void attachParams(StringBuilder builder) {
-        builder.append(player).append(PARAM_SPLITER)
+        builder.append(player).append(PARAM_DELIMITER)
                 .append(getEnchantment());
         if (level >= 0) {
-            builder.append(PARAM_SPLITER)
+            builder.append(PARAM_DELIMITER)
                     .append(level);
         }
     }
 
     @Override
-    public CommandResponse serializeResponse(JsonElement json, Gson gson) {
+    public CommandResponse deserializeResponse(JsonElement json, Gson gson) {
         return gson.fromJson(json, Response.class);
     }
 

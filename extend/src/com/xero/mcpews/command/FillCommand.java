@@ -80,15 +80,15 @@ public abstract class FillCommand extends Command {
 
     @Override
     public void attachParams(StringBuilder builder) {
-        builder.append(from.toString()).append(PARAM_SPLITER)
-                .append(to.toString()).append(PARAM_SPLITER)
-                .append(tileName).append(PARAM_SPLITER)
-                .append(tileData).append(PARAM_SPLITER)
+        builder.append(from.toString()).append(PARAM_DELIMITER)
+                .append(to.toString()).append(PARAM_DELIMITER)
+                .append(tileName).append(PARAM_DELIMITER)
+                .append(tileData).append(PARAM_DELIMITER)
                 .append(getOldBlockHandling());
     }
 
     @Override
-    public CommandResponse serializeResponse(JsonElement json, Gson gson) {
+    public CommandResponse deserializeResponse(JsonElement json, Gson gson) {
         return gson.fromJson(json, Response.class);
     }
 
@@ -165,7 +165,7 @@ public abstract class FillCommand extends Command {
         @Override
         public void attachParams(StringBuilder builder) {
             super.attachParams(builder);
-            builder.append(replaceTileName).append(PARAM_SPLITER)
+            builder.append(replaceTileName).append(PARAM_DELIMITER)
                     .append(replaceDataValue);
         }
 

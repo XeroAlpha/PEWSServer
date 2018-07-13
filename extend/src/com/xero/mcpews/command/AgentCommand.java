@@ -33,7 +33,7 @@ public class AgentCommand extends Command {
     }
 
     @Override
-    public CommandResponse serializeResponse(JsonElement json, Gson gson) {
+    public CommandResponse deserializeResponse(JsonElement json, Gson gson) {
         return gson.fromJson(json, Response.class);
     }
 

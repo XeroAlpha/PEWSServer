@@ -110,7 +110,7 @@ public class MCClient {
     @SuppressWarnings("unchecked")
     private void onCommandResponse(String requestId, ResponseBody body) {
         Command request = mCommandSessions.remove(requestId);
-        CommandResponse response = request.serializeResponse(body.getOriginJson(), gson);
+        CommandResponse response = request.deserializeResponse(body.getOriginJson(), gson);
         MCResponseReceiver receiver = request.getResponseReceiver();
         if (receiver == null) return;
         try {
