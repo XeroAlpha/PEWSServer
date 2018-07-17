@@ -29,6 +29,14 @@ import com.xero.mcpews.event.Event;
 
 public interface MCEventReceiver<T extends Event> {
     /**
+     * A event receiver which does nothing.
+     */
+    public static final MCEventReceiver NULL = new MCEventReceiver() {
+        @Override
+        public void onReceiveEvent(MCClient client, Event event) {}
+    };
+
+    /**
      * Called after a Event was received.
      * @param client the caller client of this method
      * @param event the received event

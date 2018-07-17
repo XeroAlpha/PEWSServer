@@ -30,6 +30,14 @@ import com.xero.mcpews.command.CommandResponse;
 
 public interface MCResponseReceiver<T extends CommandResponse> {
     /**
+     * A response receiver which does nothing.
+     */
+    public static final MCResponseReceiver NULL = new MCResponseReceiver() {
+        @Override
+        public void onReceiveResponse(MCClient client, CommandResponse response) {}
+    };
+
+    /**
      * Called after a Command Response was received.
      * @param client the caller client of this method
      * @param response the received response

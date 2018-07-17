@@ -33,4 +33,10 @@ public abstract class MCListenerFactory {
      * @return a new listener
      */
     public abstract MCListener create(WebSocket conn);
+
+    /**
+     * Called when exceptions occurred during creating a listener.
+     * @param ex the exception
+     */
+    public void onException(Exception ex) {}
 }

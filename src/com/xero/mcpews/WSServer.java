@@ -53,6 +53,7 @@ public class WSServer extends WebSocketServer {
         mFactory = factory;
         mClientMap = new HashMap<>();
         setConnectionLostTimeout(-1);
+        setTcpNoDelay(true);
     }
 
     /**
@@ -91,6 +92,8 @@ public class WSServer extends WebSocketServer {
         MCClient client = mClientMap.get(conn);
         if (client != null) {
             client.onError(ex);
+        } else {
+            ex.printStackTrace();
         }
     }
 

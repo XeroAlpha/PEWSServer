@@ -29,8 +29,8 @@ import com.xero.mcpews.event.EventType;
 import com.xero.mcpews.frame.*;
 import org.java_websocket.WebSocket;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This class represents a Minecraft client, providing method to interact with remote client.
@@ -53,10 +53,19 @@ public class MCClient {
         mIsDestroyed = false;
         mServer = server;
         mConnection = conn;
-        mReceivers = new HashMap<>();
-        mCommandSessions = new HashMap<>();
-        mListener = factory.create(conn);
-        mListener.onCreate(this);
+        mReceivers = new ConcurrentHashMap<>();
+        mCommandSessions = new ConcurrentHashMap<>();
+        try {
+            mListener = factory.create(conn);
+        } catch (Exception e) {
+            factory.onException(e);
+        }
+        if (mListener == null) throw new NullPointerException();
+        try {
+            mListener.onCreate(this);
+        } catch (Exception e) {
+            mListener.onException(this, e);
+        }
     }
 
     void onDestroy() {
@@ -78,8 +87,10 @@ public class MCClient {
             onMCError((ErrorBody) frame.getBody());
         } else if (Purpose.COMMAND_RESPONSE.equals(purpose)) {
             onCommandResponse(frame.getHeader().getRequestId(), (ResponseBody) frame.getBody());
-        } else {
-            System.out.println("Warning! Unknown frame: " + message);
+        } else if (purpose == null) {
+            UnknownFrame unf = (UnknownFrame) frame;
+            System.err.println("Unknown Frame: " + message);
+            onError(unf.getException());
         }
     }
 
@@ -141,25 +152,29 @@ public class MCClient {
 
     /**
      * Register a {@code EventReceiver} in the client and subscribe a specified event.
+     * If this event is subscribed, it will let the new receiver replace the old one.
      * @param type the specified type of event to subscribe
      * @param receiver the receiver to receive events of the specified type
      * @return This MCClient object to allow for chaining of calls to methods
      */
     public MCClient registerReceiver(EventType type, MCEventReceiver receiver) {
         ensureAvailable();
-        mReceivers.put(type.getId(), receiver);
-        mConnection.send(Frame.fromBody(SubscribeBody.create(type)).toJson());
+        if (receiver == null) throw new IllegalArgumentException("Receiver cannot be null");
+        if (mReceivers.put(type.getId(), receiver) == null)
+            mConnection.send(Frame.fromBody(SubscribeBody.create(type)).toJson());
         return this;
     }
 
     /**
      * Unregister a {@code EventReceiver} in the client and unsubscribe a specified event.
+     * If this event is not subscribed, it will do nothing.
      * @param type the specified type of event to unsubscribe
      * @return This MCClient object to allow for chaining of calls to methods
      */
     public MCClient unregisterReceiver(EventType type) {
         ensureAvailable();
-        mConnection.send(Frame.fromBody(UnsubscribeBody.create(type)).toJson());
+        if (mReceivers.remove(type.getId()) != null)
+            mConnection.send(Frame.fromBody(UnsubscribeBody.create(type)).toJson());
         return this;
     }
 
@@ -169,12 +184,15 @@ public class MCClient {
      * @param receiver the receiver to receive events of the specified type
      * @return This MCClient object to allow for chaining of calls to methods
      * @deprecated Using string to specify a type of event is inconvenient and not recommended.
+     * @see #registerReceiver(EventType, MCEventReceiver)
      */
     @Deprecated
     public MCClient registerReceiver(String type, MCEventReceiver<Event.Raw> receiver) {
         ensureAvailable();
-        mReceivers.put(type, receiver);
-        mConnection.send(Frame.fromBody(SubscribeBody.create(type)).toJson());
+        if (EventType.fromId(type) != null) throw new IllegalArgumentException("Event Type " + type + " has already exists");
+        if (receiver == null) throw new IllegalArgumentException("Receiver cannot be null");
+        if (mReceivers.put(type, receiver) == null)
+            mConnection.send(Frame.fromBody(SubscribeBody.create(type)).toJson());
         return this;
     }
 
@@ -183,11 +201,14 @@ public class MCClient {
      * @param type the specified type of event to unsubscribe
      * @return This MCClient object to allow for chaining of calls to methods
      * @deprecated Using string to specify a type of event is inconvenient and not recommended.
+     * @see #unregisterReceiver(EventType)
      */
     @Deprecated
     public MCClient unregisterReceiver(String type) {
         ensureAvailable();
-        mConnection.send(Frame.fromBody(UnsubscribeBody.create(type)).toJson());
+        if (EventType.fromId(type) != null) throw new IllegalArgumentException("Event Type " + type + " has already exists");
+        if (mReceivers.remove(type) != null)
+            mConnection.send(Frame.fromBody(UnsubscribeBody.create(type)).toJson());
         return this;
     }
 

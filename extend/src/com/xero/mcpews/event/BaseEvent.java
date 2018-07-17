@@ -10,7 +10,7 @@ public abstract class BaseEvent extends Event {
     private boolean Cheevos;
     private String ClientId;
     private int CurrentInput;
-    private int DeviceSessionId;
+    private String DeviceSessionId;
     private int Dim;
     private String Direction;
     private int Mode;
@@ -56,7 +56,7 @@ public abstract class BaseEvent extends Event {
         return CurrentInput;
     }
 
-    public int getDeviceSessionId() {
+    public String getDeviceSessionId() {
         return DeviceSessionId;
     }
 
